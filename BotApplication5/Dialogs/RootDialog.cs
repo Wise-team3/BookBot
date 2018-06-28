@@ -131,10 +131,16 @@ namespace BotApplication5.Dialogs
         {
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
+            EntityRecommendation booktitle;
 
-            Goodreads.Models.Response.Book book = await client.Books.GetByTitle(activity.Text);
+            res.TryFindEntity("Simple",out booktitle);
+            {
+                booktitle.Type = "Simple";
+            }
+            Goodreads.Models.Response.Book book = await client.Books.GetByTitle(booktitle.Entity);
+           // await context.PostAsync($"{activity.Text}");
 
-         //   var groups = await client.Groups.GetGroups(search: "Arts");
+            //   var groups = await client.Groups.GetGroups(search: "Arts");
             Attachment attachment = new Attachment();
             attachment.ContentType = "image/jpg";
             attachment.ContentUrl = book.ImageUrl;
