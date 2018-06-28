@@ -115,7 +115,39 @@ namespace BotApplication5.Dialogs
         static float ratings = 0;
         static string author = "";
         int find = 0;
+        [LuisIntent("Greetings")]
+        public async Task Greet(IDialogContext context, IAwaitable<object> result, LuisResult res)
+        {
+            await context.PostAsync($"Hi! I'm Nerdy,the Book Bot.");
+            
+            await context.PostAsync($"I can help you find novels,compare them and can suggest a few too.");
 
+            await context.PostAsync($"Try asking me about a book.");
+            context.Wait(this.MessageReceived);
+
+        }
+        [LuisIntent("BookSearch")]
+        public async Task Search(IDialogContext context, IAwaitable<object> result, LuisResult res)
+        {
+            var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
+            var activity = await result as Activity;
+
+            Goodreads.Models.Response.Book book = await client.Books.GetByTitle(activity.Text);
+
+         //   var groups = await client.Groups.GetGroups(search: "Arts");
+            Attachment attachment = new Attachment();
+            attachment.ContentType = "image/jpg";
+            attachment.ContentUrl = book.ImageUrl;
+            var mes = context.MakeMessage();
+            mes.Attachments.Add(attachment);
+
+            // Return our reply to the user
+            await context.PostAsync($"{book.Title}");
+            await context.PostAsync(mes);
+            await context.PostAsync($"Rating:{book.AverageRating}");
+            context.Wait(this.MessageReceived);
+
+        }
         [LuisIntent("Genre")]
         public async Task Genre(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
@@ -238,37 +270,7 @@ namespace BotApplication5.Dialogs
                 context.Wait(this.MessageReceived);
             }
         }
-        [LuisIntent("BookSearch")]
-        public async Task Search(IDialogContext context, IAwaitable<object> result, LuisResult res)
-        {
-
-
-            var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
-            var activity = await result as Activity;
-
-            // Calculate something for us to return
-            int length = (activity.Text ?? string.Empty).Length;
-
-            // Goodreads.Models.Response.Book book = await client.Books.GetByBookId(bookId: 15979976);
-            Goodreads.Models.Response.Book book = await client.Books.GetByTitle(activity.Text);
-
-            // Get a list of groups by search keyword.
-            var groups = await client.Groups.GetGroups(search: "Arts");
-            Attachment attachment = new Attachment();
-            attachment.ContentType = "image/jpg";
-            attachment.ContentUrl = book.ImageUrl;
-            var mes = context.MakeMessage();
-            mes.Attachments.Add(attachment);
-
-            // Return our reply to the user
-            await context.PostAsync($"{book.Title}");
-            await context.PostAsync(mes);
-            await context.PostAsync($"Rating:{book.AverageRating}");
-
-
-            context.Wait(this.MessageReceived);
-
-        }
+      
         [LuisIntent("Help")]
         public async Task Help(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
