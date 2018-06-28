@@ -133,10 +133,11 @@ namespace BotApplication5.Dialogs
             var activity = await result as Activity;
             EntityRecommendation booktitle;
 
-            res.TryFindEntity("Simple",out booktitle);
+           if(res.TryFindEntity("Book",out booktitle))
             {
-                booktitle.Type = "Simple";
+                booktitle.Type = "Book";
             }
+            await context.PostAsync(booktitle.Entity);
             Goodreads.Models.Response.Book book = await client.Books.GetByTitle(booktitle.Entity);
            // await context.PostAsync($"{activity.Text}");
 
@@ -281,8 +282,6 @@ namespace BotApplication5.Dialogs
         public async Task Help(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
             string message = $"Sorry,Nothing is found...Try another book";
-
-
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
             var reply = activity.CreateReply("Hello!...I have few genres in mind,choose the one you like .");
