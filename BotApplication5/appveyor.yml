@@ -1,0 +1,29 @@
+version: 1.0.0.{build}
+image: Visual Studio 2017
+configuration: Release
+
+init:
+- ps: $env:customnugetversion = if ($env:APPVEYOR_REPO_TAG -eq $True) { $env:APPVEYOR_REPO_TAG_NAME -replace 'v', '' }
+- ps: Update-AppveyorBuild -Version $env:customnugetversion
+
+nuget:
+  account_feed: true
+  project_feed: true
+  disable_publish_on_pr: true
+
+before_build:
+  - nuget restore
+
+build:
+  project: Goodreads.sln
+  publish_nuget: true
+  publish_nuget_symbols: true
+  verbosity: minimal
+
+deploy:
+- provider: NuGet
+  api_key:
+    secure: TE6pKtJkLHgyLRwPfNjKBsp2njuMhpzE426I7fzhYgG+aFzLsRNL8Mm/pR/qp0z4
+  on:
+    branch: master
+    appveyor_repo_tag: true

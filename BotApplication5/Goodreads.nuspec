@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Goodreads</id>
+        <version>1.0.1</version>
+        <title>Goodreads .NET API Client Library</title>
+        <authors>Adam Krogh; Vladimir Rybalko</authors>
+        <owners>Adam Krogh; Vladimir Rybalko</owners>
+        <licenseUrl>https://github.com/adamkrogh/goodreads-dotnet/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/adamkrogh/goodreads-dotnet</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Goodreads .NET API Client Library</description>
+        <releaseNotes>Fixed issue with invalid publication dates.
+		Fixed bugs with duplicates shelves and user position.</releaseNotes>
+        <copyright>Copyright 2018</copyright>
+        <tags>goodreads api netstandard2.0</tags>
+        <dependencies>
+            <group targetFramework=".NETStandard2.0">
+                <dependency id="RestSharp" version="106.2.1" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="lib\netstandard2.0\Goodreads.deps.json" target="lib\netstandard2.0\Goodreads.deps.json" />
+        <file src="lib\netstandard2.0\Goodreads.dll" target="lib\netstandard2.0\Goodreads.dll" />
+    </files>
+</package>

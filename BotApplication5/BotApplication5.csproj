@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4FB2DF42-FFDD-4E6A-B2B8-92707AFE2208}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BotApplication5</RootNamespace>
+    <AssemblyName>BotApplication5</AssemblyName>
+    <!--<TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>-->
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.0\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Chronic, Version=0.3.2.0, Culture=neutral, PublicKeyToken=3bd1f1ef638b0d3c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Chronic.Signed.0.3.2\lib\net40\Chronic.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Documents.Client, Version=1.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.22.0\lib\net45\Microsoft.Azure.Documents.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bot.Builder, Version=3.15.2.2, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bot.Builder.3.15.2.2\lib\net46\Microsoft.Bot.Builder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bot.Builder.Autofac, Version=3.15.2.2, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bot.Builder.3.15.2.2\lib\net46\Microsoft.Bot.Builder.Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bot.Builder.Azure, Version=3.15.2.2, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bot.Builder.Azure.3.15.2.2\lib\net46\Microsoft.Bot.Builder.Azure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bot.Builder.History, Version=3.15.2.2, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bot.Builder.History.3.15.2.2\lib\net46\Microsoft.Bot.Builder.History.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bot.Connector, Version=3.15.2.2, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bot.Connector.3.15.2.2\lib\net46\Microsoft.Bot.Connector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.7.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.7.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.7.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.1.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.1.1.4\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.40306.1554, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.4.403061554\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocols, Version=2.1.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocols.2.1.4\lib\net451\Microsoft.IdentityModel.Protocols.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect, Version=2.1.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocols.OpenIdConnect.2.1.4\lib\net451\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.4\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.8\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.15.6.27740\lib\net46\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Threading, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Threading.15.3.23\lib\net45\Microsoft.VisualStudio.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Validation, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Validation.15.3.15\lib\net45\Microsoft.VisualStudio.Validation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.1.4\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CustomDictionary.xml" />
+    <Content Include="default.htm" />
+    <Content Include="Global.asax" />
+    <Content Include="BotApplication5.bot" />
+    <Content Include="Goodreads\bin\Debug\netstandard2.0\Goodreads.dll" />
+    <Content Include="Goodreads\bin\Debug\netstandard2.0\Goodreads.pdb" />
+    <Content Include="Goodreads\Goodreads.csproj" />
+    <Content Include="Goodreads\obj\Debug\netstandard2.0\Goodreads.csproj.FileListAbsolute.txt" />
+    <Content Include="Goodreads\obj\Debug\netstandard2.0\Goodreads.dll" />
+    <Content Include="Goodreads\obj\Debug\netstandard2.0\Goodreads.pdb" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Goodreads\Clients\GoodreadsClient.cs" />
+    <Compile Include="Goodreads\Clients\IApiCredentialsInfoManager.cs" />
+    <Compile Include="Goodreads\Clients\IAuthManager.cs" />
+    <Compile Include="Goodreads\Clients\IGoodreadsClient.cs" />
+    <Compile Include="Goodreads\Clients\IOAuthGoodreadsClient.cs" />
+    <Compile Include="Goodreads\Clients\OAuthGoodreadsClient.cs" />
+    <Compile Include="Goodreads\Clients\UnauthorizedGoodreadsClient.cs" />
+    <Compile Include="Goodreads\Endpoints\Endpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\AuthorsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\AuthorsFollowingEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\BooksEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\CommentsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\EventsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\FollowersEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\FriendsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\GroupsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\NotificationsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\OwnedBooksEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\QuotesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\ReadStatusesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\RecommendationsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\ReviewsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\SeriesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\ShelvesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\TopicsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\UpdatesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\UsersEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Implementations\UserStatusesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IAuthorsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IAuthorsFollowingEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IBooksEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\ICommentsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IEventsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IFollowersEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IFriendsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IGroupsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\INotificationsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IOwnedBooksEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IQuotesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IReadStatusesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IRecommendationsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IReviewsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\ISeriesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IShelvesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\ITopicsEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IUpdatesEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IUsersEndpoint.cs" />
+    <Compile Include="Goodreads\Endpoints\Interfaces\IUserStatusesEndpoint.cs" />
+    <Compile Include="Goodreads\Exceptions\ApiException.cs" />
+    <Compile Include="Goodreads\Extensions\RestSharpExtensions.cs" />
+    <Compile Include="Goodreads\Extensions\XmlExtensions.cs" />
+    <Compile Include="Goodreads\Helpers\EnumHelpers.cs" />
+    <Compile Include="Goodreads\Http\ApiCredentials.cs" />
+    <Compile Include="Goodreads\Http\Connection.cs" />
+    <Compile Include="Goodreads\Http\IConnection.cs" />
+    <Compile Include="Goodreads\Http\QueryParameterKeyAttribute.cs" />
+    <Compile Include="Goodreads\Http\QueryParameterValueAttribute.cs" />
+    <Compile Include="Goodreads\Http\Tokens\OAuthAccessToken.cs" />
+    <Compile Include="Goodreads\Http\Tokens\OAuthRequestToken.cs" />
+    <Compile Include="Goodreads\Http\Tokens\OAuthToken.cs" />
+    <Compile Include="Goodreads\Models\ApiResponse.cs" />
+    <Compile Include="Goodreads\Models\Request\BookSearchField.cs" />
+    <Compile Include="Goodreads\Models\Request\GroupFolderSort.cs" />
+    <Compile Include="Goodreads\Models\Request\OrderInfo.cs" />
+    <Compile Include="Goodreads\Models\Request\ResourceType.cs" />
+    <Compile Include="Goodreads\Models\Request\SortFriendsList.cs" />
+    <Compile Include="Goodreads\Models\Request\SortGroupInfo.cs" />
+    <Compile Include="Goodreads\Models\Request\SortGroupList.cs" />
+    <Compile Include="Goodreads\Models\Request\SortGroupMember.cs" />
+    <Compile Include="Goodreads\Models\Request\SortReviewsList.cs" />
+    <Compile Include="Goodreads\Models\Request\TopicSubjectType.cs" />
+    <Compile Include="Goodreads\Models\Request\UpdateFilter.cs" />
+    <Compile Include="Goodreads\Models\Request\UpdateType.cs" />
+    <Compile Include="Goodreads\Models\Response\Action.cs" />
+    <Compile Include="Goodreads\Models\Response\Actor.cs" />
+    <Compile Include="Goodreads\Models\Response\Author.cs" />
+    <Compile Include="Goodreads\Models\Response\AuthorFollowing.cs" />
+    <Compile Include="Goodreads\Models\Response\AuthorFollowingGroupResource.cs" />
+    <Compile Include="Goodreads\Models\Response\AuthorSummary.cs" />
+    <Compile Include="Goodreads\Models\Response\BestBook.cs" />
+    <Compile Include="Goodreads\Models\Response\Book.cs" />
+    <Compile Include="Goodreads\Models\Response\BookLink.cs" />
+    <Compile Include="Goodreads\Models\Response\BookSummary.cs" />
+    <Compile Include="Goodreads\Models\Response\Comment.cs" />
+    <Compile Include="Goodreads\Models\Response\CompareBook.cs" />
+    <Compile Include="Goodreads\Models\Response\CompareBookReview.cs" />
+    <Compile Include="Goodreads\Models\Response\CompareBooksResult.cs" />
+    <Compile Include="Goodreads\Models\Response\FriendGroupResource.cs" />
+    <Compile Include="Goodreads\Models\Response\FriendRequest.cs" />
+    <Compile Include="Goodreads\Models\Response\GoodreadsEvent.cs" />
+    <Compile Include="Goodreads\Models\Response\Group.cs" />
+    <Compile Include="Goodreads\Models\Response\GroupBook.cs" />
+    <Compile Include="Goodreads\Models\Response\GroupFolder.cs" />
+    <Compile Include="Goodreads\Models\Response\GroupSummary.cs" />
+    <Compile Include="Goodreads\Models\Response\GroupUser.cs" />
+    <Compile Include="Goodreads\Models\Response\Notification.cs" />
+    <Compile Include="Goodreads\Models\Response\Order.cs" />
+    <Compile Include="Goodreads\Models\Response\OwnedBook.cs" />
+    <Compile Include="Goodreads\Models\Response\OwnedBookSummary.cs" />
+    <Compile Include="Goodreads\Models\Response\PaginatedList.cs" />
+    <Compile Include="Goodreads\Models\Response\PaginationModel.cs" />
+    <Compile Include="Goodreads\Models\Response\ReadStatus.cs" />
+    <Compile Include="Goodreads\Models\Response\Recommendation.cs" />
+    <Compile Include="Goodreads\Models\Response\RecommendationGroupResource.cs" />
+    <Compile Include="Goodreads\Models\Response\Review.cs" />
+    <Compile Include="Goodreads\Models\Response\ReviewDetails.cs" />
+    <Compile Include="Goodreads\Models\Response\ReviewShelf.cs" />
+    <Compile Include="Goodreads\Models\Response\ReviewStats.cs" />
+    <Compile Include="Goodreads\Models\Response\ReviewStatsContainer.cs" />
+    <Compile Include="Goodreads\Models\Response\Series.cs" />
+    <Compile Include="Goodreads\Models\Response\ShortReview.cs" />
+    <Compile Include="Goodreads\Models\Response\Topic.cs" />
+    <Compile Include="Goodreads\Models\Response\TopicFolder.cs" />
+    <Compile Include="Goodreads\Models\Response\TopicGroup.cs" />
+    <Compile Include="Goodreads\Models\Response\Update.cs" />
+    <Compile Include="Goodreads\Models\Response\User.cs" />
+    <Compile Include="Goodreads\Models\Response\UserFollowers.cs" />
+    <Compile Include="Goodreads\Models\Response\UserFollowing.cs" />
+    <Compile Include="Goodreads\Models\Response\UserFollowingStatus.cs" />
+    <Compile Include="Goodreads\Models\Response\UserFollowingSummary.cs" />
+    <Compile Include="Goodreads\Models\Response\UserShelf.cs" />
+    <Compile Include="Goodreads\Models\Response\UserStatus.cs" />
+    <Compile Include="Goodreads\Models\Response\UserStatusSummary.cs" />
+    <Compile Include="Goodreads\Models\Response\UserSummary.cs" />
+    <Compile Include="Goodreads\Models\Response\Work.cs" />
+    <Compile Include="Goodreads\obj\Debug\netstandard2.0\Goodreads.AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Goodreads\bin\Debug\netstandard2.0\Goodreads.deps.json" />
+    <Content Include="Goodreads\obj\Debug\netstandard2.0\Goodreads.AssemblyInfoInputs.cache" />
+    <Content Include="Goodreads\obj\Debug\netstandard2.0\Goodreads.csproj.CoreCompileInputs.cache" />
+    <Content Include="Goodreads\obj\Debug\netstandard2.0\Goodreads.csprojAssemblyReference.cache" />
+    <Content Include="Goodreads\obj\Goodreads.csproj.nuget.cache" />
+    <Content Include="Goodreads\obj\Goodreads.csproj.nuget.g.props" />
+    <Content Include="Goodreads\obj\Goodreads.csproj.nuget.g.targets" />
+    <Content Include="Goodreads\obj\project.assets.json" />
+    <Content Include="appveyor.yml" />
+    <Content Include="Goodreads.nuspec" />
+    <Content Include="Goodreads.ruleset" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EnableMSDeployAppOffline>true</EnableMSDeployAppOffline>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>3978</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:3978/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
