@@ -137,13 +137,17 @@ namespace BotApplication5.Dialogs
             {
                 booktitle.Type = "Book";
             }
-            await context.PostAsync(booktitle.Entity);
-            Goodreads.Models.Response.Book book = await client.Books.GetByTitle(booktitle.Entity);
+            //await context.PostAsync(booktitle.Entity);
+            string a = activity.Text.Substring((int)booktitle.StartIndex);
+            Goodreads.Models.Response.Book book = await client.Books.GetByTitle(a);
            // await context.PostAsync($"{activity.Text}");
 
             //   var groups = await client.Groups.GetGroups(search: "Arts");
             Attachment attachment = new Attachment();
+            if(book.ImageUrl.EndsWith("jpg"))
             attachment.ContentType = "image/jpg";
+            else
+                attachment.ContentType = "image/png";
             attachment.ContentUrl = book.ImageUrl;
             var mes = context.MakeMessage();
             mes.Attachments.Add(attachment);
