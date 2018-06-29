@@ -114,12 +114,7 @@ namespace BotApplication5.Dialogs
                     book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
                     if (book != null)
                     {
-                        /*   attachment.ContentUrl = book.ImageUrl;
-                           var message = context.MakeMessage();
-                           message.Attachments.Add(attachment);
-                           await context.PostAsync($"{book.Title}");
-                           // await context.PostAsync(message);
-                           await context.PostAsync($"Rating:{book.AverageRating}");*/
+                        
                             l.Add(new ThumbnailCard
                             {
                                 Title = book.Title,
@@ -172,8 +167,8 @@ namespace BotApplication5.Dialogs
                 await context.PostAsync(mes);
             else if (find == 2)
             {
-                Attachment attachment = new Attachment();
-                //int p = Convert.ToDecimal(activity.Text);
+                List<Attachment> l = new List<Attachment>();
+
                 int g = Convert.ToInt16(activity.Text);
                 Goodreads.Models.Response.Book book;
                 int i = 0;
@@ -182,24 +177,27 @@ namespace BotApplication5.Dialogs
                     book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
                     if (book != null && book.AverageRating >g)
                     {
-                        if (book.ImageUrl.EndsWith("jpg"))
-                            attachment.ContentType = "image/jpg";
-                        else
-                            attachment.ContentType = "image/png";
-                        attachment.ContentUrl = book.ImageUrl;
-                        var message = context.MakeMessage();
-                        message.Attachments.Add(attachment);
-                        await context.PostAsync($"{i+1}.{book.Title}");
-                         await context.PostAsync(message);
-                        await context.PostAsync($"Rating:{book.AverageRating}");
+                        l.Add(new ThumbnailCard
+                        {
+                            Title = book.Title,
+                            Subtitle = $"Rating:{book.AverageRating}",
+                            Text = $"Summary:{book.Description}",
+                            Images = new List<CardImage> { new CardImage(book.ImageUrl) },
+                            Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
+                        }.ToAttachment());
                     }
                     i = i + 1;
                     book = null;
                 }
+                var message = context.MakeMessage();
+                message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                message.Attachments = l;
+                await context.PostAsync(message);
                 find = 0;
-                context.Wait(this.MessageReceived);
+            
             }
             sugg = null;
+            context.Wait(this.MessageReceived);
         }
       
         [LuisIntent("Help")]
