@@ -110,20 +110,29 @@ namespace Goodreads.Clients
         /// <param name="searchField">The book fields to apply the search term against.</param>
         /// <returns>A paginated list of <see cref="Work"/> object matching the given search criteria.</returns>
         public async Task<PaginatedList<Work>> Search(string searchTerm, int page, BookSearchField searchField)
-        {
-            var parameters = new List<Parameter>
-            {
-                new Parameter { Name = "q", Value = searchTerm, Type = ParameterType.QueryString },
-                new Parameter { Name = "page", Value = page, Type = ParameterType.QueryString },
-                new Parameter
-                {
-                    Name = EnumHelpers.QueryParameterKey<BookSearchField>(),
-                    Value = EnumHelpers.QueryParameterValue(searchField),
-                    Type = ParameterType.QueryString
-                }
-            };
+        { var parameters = new List<Parameter>
+             {
+                 new Parameter { Name = "q", Value = searchTerm, Type = ParameterType.QueryString },
+                 new Parameter { Name = "page", Value = page, Type = ParameterType.QueryString },
+                 new Parameter
+                 {
+                     Name = EnumHelpers.QueryParameterKey<BookSearchField>(),
+                     Value = EnumHelpers.QueryParameterValue(searchField),
+                     Type = ParameterType.QueryString
+                 }
+             };
 
-            return await Connection.ExecuteRequest<PaginatedList<Work>>("search", parameters, null, "search").ConfigureAwait(false);
+             return await Connection.ExecuteRequest<PaginatedList<Work>>("search", parameters, null, "search").ConfigureAwait(false);
+/* var parameters = new List<Parameter>
+ {
+     new Parameter { Name = "q", Value = searchTerm, Type = ParameterType.QueryString },
+     new Parameter { Name = "search_type", Value ="books", Type = ParameterType.QueryString },
+     new Parameter { Name = "search%5Bfield%5D", Value ="genre", Type = ParameterType.QueryString }
+
+ };
+ return await Connection.ExecuteRequest<PaginatedList<Work>>("search/index.xml", parameters, null, "search").ConfigureAwait(false); 
+ */
+
         }
 
         /// <summary>
