@@ -46,33 +46,17 @@ namespace BotApplication5.Dialogs
             }
             string a = activity.Text.Substring((int)booktitle.StartIndex);
             Goodreads.Models.Response.Book book = await client.Books.GetByTitle(a);
-            //   var groups = await client.Groups.GetGroups(search: "Arts");
-            /*Attachment attachment = new Attachment();
-            if(book.ImageUrl.EndsWith("jpg"))
-            attachment.ContentType = "image/jpg";
-            else
-                attachment.ContentType = "image/png";
-            attachment.ContentUrl = book.ImageUrl;
-            var mes = context.MakeMessage();
-            mes.Attachments.Add(attachment);
-
-            // Return our reply to the user
-            await context.PostAsync($"{book.Title}");
-            await context.PostAsync(mes);
-            await context.PostAsync($"Rating:{book.AverageRating}");
-            await context.PostAsync($"About: {book.Description}");*/
-
             var message = context.MakeMessage();
             message.Attachments= new List<Attachment>
-    {
-        new ThumbnailCard
-        {
-            Title =book.Title,
-            Subtitle =$"Rating:{book.AverageRating}",
-            Text =$"Summary:{book.Description}",
-            Images = new List<CardImage> { new CardImage(book.ImageUrl) },
-            Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
-        }.ToAttachment()
+            {
+                new ThumbnailCard
+                {
+                    Title = book.Title,
+                    Subtitle = $"Rating:{book.AverageRating}",
+                    Text = $"Summary:{book.Description}",
+                    Images = new List<CardImage> { new CardImage(book.ImageUrl) },
+                    Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
+                }.ToAttachment()
     };
             await context.PostAsync(message);
 
@@ -119,26 +103,40 @@ namespace BotApplication5.Dialogs
             {
 
                 int i = 0;
-                Attachment attachment = new Attachment();
-                attachment.ContentType = "image/jpg";
+               /* Attachment attachment = new Attachment();
+                attachment.ContentType = "image/jpg";*/
                 Goodreads.Models.Response.Book book;
                 find = 0;
+                List<Attachment> l = new List<Attachment>();
                 while (sugg.List.Count() != i)
                 {
                    
                     book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
                     if (book != null)
                     {
-                        attachment.ContentUrl = book.ImageUrl;
-                        var message = context.MakeMessage();
-                        message.Attachments.Add(attachment);
-                        await context.PostAsync($"{book.Title}");
-                        // await context.PostAsync(message);
-                        await context.PostAsync($"Rating:{book.AverageRating}");
+                        /*   attachment.ContentUrl = book.ImageUrl;
+                           var message = context.MakeMessage();
+                           message.Attachments.Add(attachment);
+                           await context.PostAsync($"{book.Title}");
+                           // await context.PostAsync(message);
+                           await context.PostAsync($"Rating:{book.AverageRating}");*/
+                            l.Add(new ThumbnailCard
+                            {
+                                Title = book.Title,
+                                Subtitle = $"Rating:{book.AverageRating}",
+                                Text = $"Summary:{book.Description}",
+                                Images = new List<CardImage> { new CardImage(book.ImageUrl) },
+                                Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
+                            }.ToAttachment());
+                        
                     }
                     i = i + 1;
                     book = null;
                 }
+                var message = context.MakeMessage();
+                message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                message.Attachments = l;
+                await context.PostAsync(message);
                 sugg = null;
                 
             }
