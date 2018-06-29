@@ -47,7 +47,7 @@ namespace BotApplication5.Dialogs
             string a = activity.Text.Substring((int)booktitle.StartIndex);
             Goodreads.Models.Response.Book book = await client.Books.GetByTitle(a);
             //   var groups = await client.Groups.GetGroups(search: "Arts");
-            Attachment attachment = new Attachment();
+            /*Attachment attachment = new Attachment();
             if(book.ImageUrl.EndsWith("jpg"))
             attachment.ContentType = "image/jpg";
             else
@@ -60,7 +60,22 @@ namespace BotApplication5.Dialogs
             await context.PostAsync($"{book.Title}");
             await context.PostAsync(mes);
             await context.PostAsync($"Rating:{book.AverageRating}");
-            await context.PostAsync($"About: {book.Description}");
+            await context.PostAsync($"About: {book.Description}");*/
+
+            var message = context.MakeMessage();
+            message.Attachments= new List<Attachment>
+    {
+        new HeroCard
+        {
+            Title =book.Title,
+            Subtitle =$"Rating:{book.AverageRating}",
+            Text =$"Summary:{book.Description}",
+            Images = new List<CardImage> { new CardImage(book.ImageUrl) },
+            Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
+        }.ToAttachment()
+    };
+            await context.PostAsync(message);
+
             context.Wait(this.MessageReceived);
 
         }
