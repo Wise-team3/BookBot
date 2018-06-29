@@ -65,7 +65,7 @@ namespace BotApplication5.Dialogs
             var message = context.MakeMessage();
             message.Attachments= new List<Attachment>
     {
-        new HeroCard
+        new ThumbnailCard
         {
             Title =book.Title,
             Subtitle =$"Rating:{book.AverageRating}",
