@@ -71,8 +71,6 @@ namespace BotApplication5.Dialogs
             //*******show me books belonging to paranormal genre************
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
-         
-
             if (find == 0)
             {
                 EntityRecommendation gen;
@@ -95,14 +93,13 @@ namespace BotApplication5.Dialogs
                     Actions = new List<CardAction>()
                     {
                         new CardAction(){ Title = "Ratings", Type=ActionTypes.ImBack, Value="Ratings" },
-                        new CardAction(){ Title = "Author", Type=ActionTypes.ImBack, Value="Author" },
                         new CardAction(){ Title = "All", Type=ActionTypes.ImBack, Value="All" },
-                      
                     }
                 };
                 await context.PostAsync(reply);
       
             }
+           
             else if (activity.Text == "All" && find == 1)
             {
 
@@ -133,8 +130,6 @@ namespace BotApplication5.Dialogs
             else if (activity.Text == "Ratings" && find == 1)
             {
                 int i = 0;
-                Attachment attachment = new Attachment();
-                attachment.ContentType = "image/jpg";
                 find = 2;
                 var reply = activity.CreateReply("choose from the following ratings");
                 reply.Type = ActivityTypes.Message;
@@ -150,7 +145,6 @@ namespace BotApplication5.Dialogs
                     }
                 };
                 await context.PostAsync(reply);
-
             }
             context.Wait(this.MessageReceived);
         }
@@ -166,13 +160,14 @@ namespace BotApplication5.Dialogs
             else if (find == 2)
             {
                 Attachment attachment = new Attachment();
-               
+                //int p = Convert.ToDecimal(activity.Text);
+                int g = Convert.ToInt16(activity.Text);
                 Goodreads.Models.Response.Book book;
                 int i = 0;
                 while (sugg.List.Count() != i)
                 {
-                    book = await client.Books.GetByBookId(sugg.List.ElementAt(i).Id);
-                    if (book != null && book.AverageRating > Convert.ToDecimal(activity.Text))
+                    book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
+                    if (book != null && book.AverageRating >g)
                     {
                         if (book.ImageUrl.EndsWith("jpg"))
                             attachment.ContentType = "image/jpg";
@@ -181,8 +176,8 @@ namespace BotApplication5.Dialogs
                         attachment.ContentUrl = book.ImageUrl;
                         var message = context.MakeMessage();
                         message.Attachments.Add(attachment);
-                        await context.PostAsync($"{book.Title}");
-                        // await context.PostAsync(message);
+                        await context.PostAsync($"{i+1}.{book.Title}");
+                         await context.PostAsync(message);
                         await context.PostAsync($"Rating:{book.AverageRating}");
                     }
                     i = i + 1;
