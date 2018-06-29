@@ -78,13 +78,13 @@ namespace BotApplication5.Dialogs
                 {
                     gen.Type = "Genre Type";
                 }
+                
                 sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Genre);
-          
                 genre = activity.Text;
-              
-                string mes = $"Found '{sugg.List.Count()}' books ....Do you want to search by following?";
+                await context.PostAsync($"{ sugg.List.Count()}");
+                string mes = $"Found {sugg.List.Count()} books ....Do you want to search by following?";
                 find = 1;
-                var reply = activity.CreateReply(mes);
+               var reply = activity.CreateReply(mes);
                 reply.Type = ActivityTypes.Message;
                 reply.TextFormat = TextFormatTypes.Plain;
                 reply.SuggestedActions = new SuggestedActions()
@@ -213,11 +213,13 @@ namespace BotApplication5.Dialogs
             {
                 Actions = new List<CardAction>()
                     {
-                        new CardAction(){ Title = "Romance", Type=ActionTypes.ImBack, Value="Romance" },
-                        new CardAction(){ Title = "Paranormal", Type=ActionTypes.ImBack, Value="Paranormal" },
-                        new CardAction(){ Title = "Sci-fi", Type=ActionTypes.ImBack, Value="Sci-fi" },
-                        new CardAction(){ Title = "Fantasy", Type=ActionTypes.ImBack, Value="Fantasy" },
-                        new CardAction(){ Title = "Suspence", Type=ActionTypes.ImBack, Value="Suspence" }
+                        new CardAction(){ Title = "Romance", Type=ActionTypes.ImBack, Value="Search for books belonging to Romance genre" },
+                        new CardAction(){ Title = "Paranormal", Type=ActionTypes.ImBack, Value="Search for books belonging to Paranormal genre" },
+                        new CardAction(){ Title = "Thriller", Type=ActionTypes.ImBack, Value="Search for books belonging to thriller genre" },
+                        new CardAction(){ Title = "Fantasy", Type=ActionTypes.ImBack, Value="Search for books belonging to Fantasy genre" },
+                        new CardAction(){ Title = "Crime", Type=ActionTypes.ImBack, Value="Search for books belonging to Crime genre" },
+                        new CardAction(){ Title = "Fiction", Type=ActionTypes.ImBack, Value="Search for books belonging to fiction genre" }
+                        //new CardAction(){ Title = "Young Adult", Type=ActionTypes.ImBack, Value="Search for books belonging to young-adult genre" }
                     }
             };
             await context.PostAsync(reply);
