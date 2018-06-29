@@ -115,7 +115,8 @@ namespace BotApplication5.Dialogs
         static float ratings = 0;
         static string author = "";
         int find = 0;
-        [LuisIntent("Greetings")]
+        static Goodreads.Models.Response.PaginatedList<Goodreads.Models.Response.Work> sugg;
+   [LuisIntent("Greetings")]
         public async Task Greet(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
             await context.PostAsync($"Hi! I'm Nerdy,the Book Bot.");
@@ -129,6 +130,7 @@ namespace BotApplication5.Dialogs
         [LuisIntent("BookSearch")]
         public async Task Search(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
+            //*******"search for a book named percy jackson"***********
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
             EntityRecommendation booktitle;
@@ -137,11 +139,8 @@ namespace BotApplication5.Dialogs
             {
                 booktitle.Type = "Book";
             }
-            //await context.PostAsync(booktitle.Entity);
             string a = activity.Text.Substring((int)booktitle.StartIndex);
             Goodreads.Models.Response.Book book = await client.Books.GetByTitle(a);
-           // await context.PostAsync($"{activity.Text}");
-
             //   var groups = await client.Groups.GetGroups(search: "Arts");
             Attachment attachment = new Attachment();
             if(book.ImageUrl.EndsWith("jpg"))
@@ -156,6 +155,7 @@ namespace BotApplication5.Dialogs
             await context.PostAsync($"{book.Title}");
             await context.PostAsync(mes);
             await context.PostAsync($"Rating:{book.AverageRating}");
+            await context.PostAsync($"About: {book.Description}");
             context.Wait(this.MessageReceived);
 
         }
@@ -163,13 +163,20 @@ namespace BotApplication5.Dialogs
         public async Task Genre(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
 
-            //string message = $"Hello...Try asking me about the books";
+            //*******show me books belonging to paranormal genre************
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
-            Goodreads.Models.Response.PaginatedList<Goodreads.Models.Response.Work> sugg = await client.Books.Search(activity.Text, 1, Goodreads.Models.Request.BookSearchField.Title);
+         
 
             if (find == 0)
             {
+                EntityRecommendation gen;
+
+                if (res.TryFindEntity("Genre Type", out gen))
+                {
+                    gen.Type = "Genre Type";
+                }
+                sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Title);
                 genre = activity.Text;
                 string mes = $"Found '{sugg.List.Count()}' books ....Do you want to search by following?";
                 find = 1;
@@ -196,7 +203,7 @@ namespace BotApplication5.Dialogs
                 Attachment attachment = new Attachment();
                 attachment.ContentType = "image/jpg";
                 Goodreads.Models.Response.Book book;
-                find = 2;
+                find = 0;
                 while (sugg.List.Count() != i)
                 {
                     //  await context.PostAsync($"{sugg.List.ElementAt(i).Id}");
@@ -214,6 +221,7 @@ namespace BotApplication5.Dialogs
                     i = i + 1;
                     book = null;
                 }
+                sugg = null;
                 //context.Wait(this.MessageReceived);
             }
             else if (activity.Text == "Ratings" && find == 1)
@@ -221,9 +229,8 @@ namespace BotApplication5.Dialogs
                 int i = 0;
                 Attachment attachment = new Attachment();
                 attachment.ContentType = "image/jpg";
-                Goodreads.Models.Response.Book book;
                 find = 2;
-                var reply = activity.CreateReply("choose the following ratings");
+                var reply = activity.CreateReply("choose from the following ratings");
                 reply.Type = ActivityTypes.Message;
                 reply.TextFormat = TextFormatTypes.Plain;
                 reply.SuggestedActions = new SuggestedActions()
@@ -238,8 +245,6 @@ namespace BotApplication5.Dialogs
                 };
                 await context.PostAsync(reply);
 
-                // context.Wait(this.MessageReceived);
-
             }
             context.Wait(this.MessageReceived);
         }
@@ -249,24 +254,26 @@ namespace BotApplication5.Dialogs
 
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
-            Goodreads.Models.Response.PaginatedList<Goodreads.Models.Response.Work> sugg = await client.Books.Search(genre, 1, Goodreads.Models.Request.BookSearchField.Title);
+          //  Goodreads.Models.Response.PaginatedList<Goodreads.Models.Response.Work> sugg = await client.Books.Search(genre, 1, Goodreads.Models.Request.BookSearchField.Title);
 
-            string mes = $"Hello...Try asking me about the books or type 'help' to explore specific genre";
+            string mes = $"Sorry...Try asking me about the books or type 'help' to explore specific genre";
             if (find < 2)
                 await context.PostAsync(mes);
             else if (find == 2)
             {
                 Attachment attachment = new Attachment();
-                attachment.ContentType = "image/jpg";
+               
                 Goodreads.Models.Response.Book book;
                 int i = 0;
                 while (sugg.List.Count() != i)
                 {
-
-                    //  await context.PostAsync($"{sugg.List.ElementAt(i).Id}");
                     book = await client.Books.GetByBookId(sugg.List.ElementAt(i).Id);
                     if (book != null && book.AverageRating > Convert.ToDecimal(activity.Text))
                     {
+                        if (book.ImageUrl.EndsWith("jpg"))
+                            attachment.ContentType = "image/jpg";
+                        else
+                            attachment.ContentType = "image/png";
                         attachment.ContentUrl = book.ImageUrl;
                         var message = context.MakeMessage();
                         message.Attachments.Add(attachment);
@@ -278,8 +285,10 @@ namespace BotApplication5.Dialogs
                     i = i + 1;
                     book = null;
                 }
+                find = 0;
                 context.Wait(this.MessageReceived);
             }
+            sugg = null;
         }
       
         [LuisIntent("Help")]
@@ -288,7 +297,7 @@ namespace BotApplication5.Dialogs
             string message = $"Sorry,Nothing is found...Try another book";
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
-            var reply = activity.CreateReply("Hello!...I have few genres in mind,choose the one you like .");
+            var reply = activity.CreateReply("umm...I have few genres in mind,choose the one you like .");
             reply.Type = ActivityTypes.Message;
             reply.TextFormat = TextFormatTypes.Plain;
             reply.SuggestedActions = new SuggestedActions()
@@ -309,7 +318,7 @@ namespace BotApplication5.Dialogs
         [LuisIntent("None")]
         public async Task None(IDialogContext context, LuisResult result)
         {
-            string message = $"Hello...Try asking me about the books or type 'help' to explore specifically";
+            string message = $"Hello...Try asking me about the books or type 'help' to explore more specifically";
 
             await context.PostAsync(message);
 
