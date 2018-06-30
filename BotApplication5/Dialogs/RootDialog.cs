@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-//using Goodreads;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Builder.Dialogs;
@@ -21,14 +20,14 @@ namespace BotApplication5.Dialogs
         static string author = "";
         static int find = 0;
         static Goodreads.Models.Response.PaginatedList<Goodreads.Models.Response.Work> sugg;
-   [LuisIntent("Greetings")]
+        [LuisIntent("Greetings")]
         public async Task Greet(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
             await context.PostAsync($"Hi! I'm Nerdy,the Book Bot.");
-            
+
             await context.PostAsync($"I can help you find novels,compare them and can suggest a few too.");
 
-            await context.PostAsync($"Try asking me about a book.");
+            await context.PostAsync($"Try asking me about a books or ask for 'help' to explore me completely...");
             context.Wait(this.MessageReceived);
 
         }
@@ -38,16 +37,17 @@ namespace BotApplication5.Dialogs
             //*******"search for a book named percy jackson"***********
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
-            EntityRecommendation booktitle;
 
-           if(res.TryFindEntity("Book",out booktitle))
+            //Get the entity of the matched intents 
+            EntityRecommendation booktitle;
+            if (res.TryFindEntity("Book", out booktitle))
             {
-                booktitle.Type = "Book";
+                booktitle.Type = "Book";      // set the type of entity used in LUIS
             }
             string a = activity.Text.Substring((int)booktitle.StartIndex);
             Goodreads.Models.Response.Book book = await client.Books.GetByTitle(a);
             var message = context.MakeMessage();
-            message.Attachments= new List<Attachment>
+            message.Attachments = new List<Attachment>
             {
                 new ThumbnailCard
                 {
@@ -55,13 +55,86 @@ namespace BotApplication5.Dialogs
                     Subtitle = $"Rating:{book.AverageRating}",
                     Text = $"Summary:{book.Description}",
                     Images = new List<CardImage> { new CardImage(book.ImageUrl) },
-                    Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
+                    Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://www.goodreads.com/search?q="+book.Title) }
                 }.ToAttachment()
-    };
+            };
             await context.PostAsync(message);
 
             context.Wait(this.MessageReceived);
 
+        }
+        public async Task displayAsync(IDialogContext context, IAwaitable<object> result, LuisResult res,Goodreads.IGoodreadsClient client)
+        {
+            var activity = await result as Activity;
+            if (find == 0) { 
+            string mes = $"Found {sugg.List.Count()} books ....Do you want to search by following?";
+            find = 1;
+            var reply = activity.CreateReply(mes);
+            reply.Type = ActivityTypes.Message;
+            reply.TextFormat = TextFormatTypes.Plain;
+            reply.SuggestedActions = new SuggestedActions()
+            {
+                Actions = new List<CardAction>()
+                    {
+                        new CardAction(){ Title = "Ratings", Type=ActionTypes.ImBack, Value="Ratings" },
+                        new CardAction(){ Title = "All", Type=ActionTypes.ImBack, Value="All" },
+                    }
+            };
+            await context.PostAsync(reply); }
+            else if (activity.Text == "All" && find == 1)
+            {
+
+                int i = 0;
+     
+        Goodreads.Models.Response.Book book;
+        find = 0;
+                List<Attachment> l = new List<Attachment>();
+                while (sugg.List.Count() != i)
+                {
+
+                    book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
+                    if (book != null)
+                    {
+
+                        l.Add(new ThumbnailCard
+                        {
+                            Title = book.Title,
+                            Subtitle = $"Rating:{book.AverageRating}",
+                            Text = $"Summary:{book.Description}",
+                            Images = new List<CardImage> { new CardImage(book.ImageUrl) },
+                            Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://www.goodreads.com/search?q=" + book.Title) }
+                        }.ToAttachment());
+
+                    }
+                    i = i + 1;
+                    book = null;
+                }
+                var message = context.MakeMessage();
+message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                message.Attachments = l;
+                await context.PostAsync(message);
+sugg = null;
+
+            }
+            else if (activity.Text == "Ratings" && find == 1)
+            {
+                int i = 0;
+find = 2;
+                var reply = activity.CreateReply("choose from the following ratings");
+reply.Type = ActivityTypes.Message;
+                reply.TextFormat = TextFormatTypes.Plain;
+                reply.SuggestedActions = new SuggestedActions()
+{
+    Actions = new List<CardAction>()
+                    {
+                        new CardAction(){ Title = ">1", Type=ActionTypes.ImBack, Value="1" },
+                        new CardAction(){ Title = ">2", Type=ActionTypes.ImBack, Value="2" },
+                        new CardAction(){ Title = ">3", Type=ActionTypes.ImBack, Value="3" },
+                        new CardAction(){ Title = ">4", Type=ActionTypes.ImBack, Value="4" },
+                    }
+                };
+await context.PostAsync(reply);
+            }
         }
         [LuisIntent("Genre")]
         public async Task Genre(IDialogContext context, IAwaitable<object> result, LuisResult res)
@@ -78,82 +151,34 @@ namespace BotApplication5.Dialogs
                 {
                     gen.Type = "Genre Type";
                 }
-                
+
                 sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Genre);
                 genre = activity.Text;
-                await context.PostAsync($"{ sugg.List.Count()}");
-                string mes = $"Found {sugg.List.Count()} books ....Do you want to search by following?";
-                find = 1;
-               var reply = activity.CreateReply(mes);
-                reply.Type = ActivityTypes.Message;
-                reply.TextFormat = TextFormatTypes.Plain;
-                reply.SuggestedActions = new SuggestedActions()
-                {
-                    Actions = new List<CardAction>()
-                    {
-                        new CardAction(){ Title = "Ratings", Type=ActionTypes.ImBack, Value="Ratings" },
-                        new CardAction(){ Title = "All", Type=ActionTypes.ImBack, Value="All" },
-                    }
-                };
-                await context.PostAsync(reply);
-      
-            }
-           
-            else if (activity.Text == "All" && find == 1)
-            {
 
-                int i = 0;
-               /* Attachment attachment = new Attachment();
-                attachment.ContentType = "image/jpg";*/
-                Goodreads.Models.Response.Book book;
-                find = 0;
-                List<Attachment> l = new List<Attachment>();
-                while (sugg.List.Count() != i)
-                {
-                   
-                    book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
-                    if (book != null)
-                    {
-                        
-                            l.Add(new ThumbnailCard
-                            {
-                                Title = book.Title,
-                                Subtitle = $"Rating:{book.AverageRating}",
-                                Text = $"Summary:{book.Description}",
-                                Images = new List<CardImage> { new CardImage(book.ImageUrl) },
-                                Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
-                            }.ToAttachment());
-                        
-                    }
-                    i = i + 1;
-                    book = null;
-                }
-                var message = context.MakeMessage();
-                message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                message.Attachments = l;
-                await context.PostAsync(message);
-                sugg = null;
-                
             }
-            else if (activity.Text == "Ratings" && find == 1)
+            await displayAsync(context, result, res, client);
+            context.Wait(this.MessageReceived);
+        }
+        
+        [LuisIntent("Author")]
+        public async Task Author(IDialogContext context, IAwaitable<object> result, LuisResult res)
+        {
+
+            //*******show me books belonging to paranormal genre************
+            var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
+            var activity = await result as Activity;
+            if (find == 0)
             {
-                int i = 0;
-                find = 2;
-                var reply = activity.CreateReply("choose from the following ratings");
-                reply.Type = ActivityTypes.Message;
-                reply.TextFormat = TextFormatTypes.Plain;
-                reply.SuggestedActions = new SuggestedActions()
+                EntityRecommendation gen;
+
+                if (res.TryFindEntity("author", out gen))
                 {
-                    Actions = new List<CardAction>()
-                    {
-                        new CardAction(){ Title = ">1", Type=ActionTypes.ImBack, Value="1" },
-                        new CardAction(){ Title = ">2", Type=ActionTypes.ImBack, Value="2" },
-                        new CardAction(){ Title = ">3", Type=ActionTypes.ImBack, Value="3" },
-                        new CardAction(){ Title = ">4", Type=ActionTypes.ImBack, Value="4" },
-                    }
-                };
-                await context.PostAsync(reply);
+                    gen.Type = "author";
+                }
+               
+                sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Author);
             }
+            await displayAsync(context, result, res, client);
             context.Wait(this.MessageReceived);
         }
         [LuisIntent("Ratings")]
@@ -170,12 +195,12 @@ namespace BotApplication5.Dialogs
                 List<Attachment> l = new List<Attachment>();
 
                 int g = Convert.ToInt16(activity.Text);
-                Goodreads.Models.Response.Book book;
+               Goodreads.Models.Response.Book book;
                 int i = 0;
                 while (sugg.List.Count() != i)
                 {
                     book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
-                    if (book != null && book.AverageRating >g)
+                    if (book != null && book.AverageRating > g)
                     {
                         l.Add(new ThumbnailCard
                         {
@@ -183,7 +208,7 @@ namespace BotApplication5.Dialogs
                             Subtitle = $"Rating:{book.AverageRating}",
                             Text = $"Summary:{book.Description}",
                             Images = new List<CardImage> { new CardImage(book.ImageUrl) },
-                            Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://docs.microsoft.com/bot-framework") }
+                            Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "more..", value: "https://www.goodreads.com/search?q=" + book.Title) }
                         }.ToAttachment());
                     }
                     i = i + 1;
@@ -194,12 +219,12 @@ namespace BotApplication5.Dialogs
                 message.Attachments = l;
                 await context.PostAsync(message);
                 find = 0;
-            
+
             }
             sugg = null;
             context.Wait(this.MessageReceived);
         }
-      
+
         [LuisIntent("Help")]
         public async Task Help(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
