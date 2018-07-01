@@ -16,8 +16,6 @@ namespace BotApplication5.Dialogs
     {
         const string ApiKey = "MdkOmbDoxa2vczCWSRJIw";
         const string ApiSecret = "s8JXg023iZaezn9oIpkPWWl5ThQux1HznNOSuX9OLU";
-        static string genre = "";
-        static string author = "";
         static int find = 0;
         static Goodreads.Models.Response.PaginatedList<Goodreads.Models.Response.Work> sugg;
         [LuisIntent("Greetings")]
@@ -25,9 +23,9 @@ namespace BotApplication5.Dialogs
         {
             await context.PostAsync($"Hi! I'm Nerdy,the Book Bot.");
 
-            await context.PostAsync($"I can help you find novels,compare them and can suggest a few too.");
+            await context.PostAsync($"I can help you find novels based on their name,authors and can suggest a few based on genre too.");
 
-            await context.PostAsync($"Try asking me about a books or ask for 'help' to explore me completely...");
+            await context.PostAsync($"Try asking me about a books or ask for 'help' to get started with...");
             context.Wait(this.MessageReceived);
 
         }
@@ -63,31 +61,16 @@ namespace BotApplication5.Dialogs
             context.Wait(this.MessageReceived);
 
         }
-        public async Task displayAsync(IDialogContext context, IAwaitable<object> result, LuisResult res,Goodreads.IGoodreadsClient client)
+        public async Task displayAsync(IDialogContext context, IAwaitable<object> result, LuisResult res, Goodreads.IGoodreadsClient client)
         {
             var activity = await result as Activity;
-            if (find == 0) { 
-            string mes = $"Found {sugg.List.Count()} books ....Do you want to search by following?";
-            find = 1;
-            var reply = activity.CreateReply(mes);
-            reply.Type = ActivityTypes.Message;
-            reply.TextFormat = TextFormatTypes.Plain;
-            reply.SuggestedActions = new SuggestedActions()
-            {
-                Actions = new List<CardAction>()
-                    {
-                        new CardAction(){ Title = "Ratings", Type=ActionTypes.ImBack, Value="Ratings" },
-                        new CardAction(){ Title = "All", Type=ActionTypes.ImBack, Value="All" },
-                    }
-            };
-            await context.PostAsync(reply); }
-            else if (activity.Text == "All" && find == 1)
+            if (activity.Text == "All" && find == 1)
             {
 
                 int i = 0;
-     
-        Goodreads.Models.Response.Book book;
-        find = 0;
+
+                Goodreads.Models.Response.Book book;
+                find = 0;
                 List<Attachment> l = new List<Attachment>();
                 while (sugg.List.Count() != i)
                 {
@@ -110,22 +93,22 @@ namespace BotApplication5.Dialogs
                     book = null;
                 }
                 var message = context.MakeMessage();
-message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                 message.Attachments = l;
                 await context.PostAsync(message);
-sugg = null;
+                sugg = null;
 
             }
             else if (activity.Text == "Ratings" && find == 1)
             {
                 int i = 0;
-find = 2;
+                find = 2;
                 var reply = activity.CreateReply("choose from the following ratings");
-reply.Type = ActivityTypes.Message;
+                reply.Type = ActivityTypes.Message;
                 reply.TextFormat = TextFormatTypes.Plain;
                 reply.SuggestedActions = new SuggestedActions()
-{
-    Actions = new List<CardAction>()
+                {
+                    Actions = new List<CardAction>()
                     {
                         new CardAction(){ Title = ">1", Type=ActionTypes.ImBack, Value="1" },
                         new CardAction(){ Title = ">2", Type=ActionTypes.ImBack, Value="2" },
@@ -133,8 +116,26 @@ reply.Type = ActivityTypes.Message;
                         new CardAction(){ Title = ">4", Type=ActionTypes.ImBack, Value="4" },
                     }
                 };
-await context.PostAsync(reply);
+                await context.PostAsync(reply);
             }
+            else
+            {
+                string mes = $"Found {sugg.List.Count()} books ....Do you want to search by following?";
+                find = 1;
+                var reply = activity.CreateReply(mes);
+                reply.Type = ActivityTypes.Message;
+                reply.TextFormat = TextFormatTypes.Plain;
+                reply.SuggestedActions = new SuggestedActions()
+                {
+                    Actions = new List<CardAction>()
+                    {
+                        new CardAction(){ Title = "Ratings", Type=ActionTypes.ImBack, Value="Ratings" },
+                        new CardAction(){ Title = "All", Type=ActionTypes.ImBack, Value="All" },
+                    }
+                };
+                await context.PostAsync(reply);
+            }
+
         }
         [LuisIntent("Genre")]
         public async Task Genre(IDialogContext context, IAwaitable<object> result, LuisResult res)
@@ -153,13 +154,12 @@ await context.PostAsync(reply);
                 }
 
                 sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Genre);
-                genre = activity.Text;
 
             }
             await displayAsync(context, result, res, client);
             context.Wait(this.MessageReceived);
         }
-        
+
         [LuisIntent("Author")]
         public async Task Author(IDialogContext context, IAwaitable<object> result, LuisResult res)
         {
@@ -167,17 +167,17 @@ await context.PostAsync(reply);
             //*******show me books belonging to paranormal genre************
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
-            if (find == 0)
-            {
-                EntityRecommendation gen;
 
-                if (res.TryFindEntity("author", out gen))
-                {
-                    gen.Type = "author";
-                }
-               
-                sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Author);
+
+            EntityRecommendation gen;
+
+            if (res.TryFindEntity("author", out gen))
+            {
+                gen.Type = "author";
             }
+
+            sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Author);
+
             await displayAsync(context, result, res, client);
             context.Wait(this.MessageReceived);
         }
@@ -195,7 +195,7 @@ await context.PostAsync(reply);
                 List<Attachment> l = new List<Attachment>();
 
                 int g = Convert.ToInt16(activity.Text);
-               Goodreads.Models.Response.Book book;
+                Goodreads.Models.Response.Book book;
                 int i = 0;
                 while (sugg.List.Count() != i)
                 {
