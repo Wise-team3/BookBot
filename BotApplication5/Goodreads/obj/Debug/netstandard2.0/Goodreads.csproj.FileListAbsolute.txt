@@ -1,0 +1,9 @@
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\bin\Debug\netstandard2.0\Goodreads.deps.json
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\bin\Debug\netstandard2.0\Goodreads.dll
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\bin\Debug\netstandard2.0\Goodreads.pdb
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\obj\Debug\netstandard2.0\Goodreads.csprojAssemblyReference.cache
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\obj\Debug\netstandard2.0\Goodreads.csproj.CoreCompileInputs.cache
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\obj\Debug\netstandard2.0\Goodreads.AssemblyInfoInputs.cache
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\obj\Debug\netstandard2.0\Goodreads.AssemblyInfo.cs
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\obj\Debug\netstandard2.0\Goodreads.dll
+C:\Users\yoshita\Downloads\goodreads-dotnet-master\goodreads-dotnet-master\Goodreads\obj\Debug\netstandard2.0\Goodreads.pdb
