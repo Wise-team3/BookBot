@@ -10,7 +10,7 @@ using System.Linq;
 namespace BotApplication5.Dialogs
 {
 
-    [LuisModel("2f0a49fb-a9a3-4203-9185-c3e7eeeee50f", "c272eab449364677a01c67a6d038190a")]
+    [LuisModel("ee3548f8-5472-4bce-9b9e-7c5a5b0beac3", "1bfe00ae7dac44579916f1fea6891ae3")]
     [Serializable]
     public class RootDialog : LuisDialog<object>
     {
@@ -74,7 +74,7 @@ namespace BotApplication5.Dialogs
                 Goodreads.Models.Response.Book book;
                 find = 0;
                 List<Attachment> l = new List<Attachment>();
-                while (sugg.List.Count() != i)
+                while (i < 10 && sugg.List.Count() > i)
                 {
 
                     book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
@@ -120,9 +120,9 @@ namespace BotApplication5.Dialogs
                 };
                 await context.PostAsync(reply);
             }
-            else 
+            else
             {
-                string mes = $"Found {sugg.List.Count()} books ....Do you want to search by following?";
+                string mes = $"Found 9 books ....Do you want to search by following?";
                 find = 1;
                 var reply = activity.CreateReply(mes);
                 reply.Type = ActivityTypes.Message;
@@ -137,7 +137,7 @@ namespace BotApplication5.Dialogs
                 };
                 await context.PostAsync(reply);
             }
-           
+
         }
         [LuisIntent("Genre")]
         public async Task Genre(IDialogContext context, IAwaitable<object> result, LuisResult res)
@@ -170,17 +170,17 @@ namespace BotApplication5.Dialogs
             //*******show me books belonging to paranormal genre************
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
-            
-          
+
+
             EntityRecommendation gen;
 
-                if (res.TryFindEntity("author", out gen))
-                {
-                    gen.Type = "author";
-                }
+            if (res.TryFindEntity("author", out gen))
+            {
+                gen.Type = "author";
+            }
 
-                sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Author);
-               
+            sugg = await client.Books.Search(gen.Entity, 1, Goodreads.Models.Request.BookSearchField.Author);
+
             await displayAsync(context, result, res, client);
             context.Wait(this.MessageReceived);
         }
@@ -191,16 +191,16 @@ namespace BotApplication5.Dialogs
             var client = Goodreads.GoodreadsClient.Create(ApiKey, ApiSecret);
             var activity = await result as Activity;
             string mes = $"Sorry...Try asking me about the books or type 'help' to explore specific genre";
-            if (find < 2)
+            if (find < 1)
                 await context.PostAsync(mes);
-            else if (find == 2)
+            else if (find>=1 )
             {
                 List<Attachment> l = new List<Attachment>();
 
                 int g = Convert.ToInt16(activity.Text);
                 Goodreads.Models.Response.Book book;
                 int i = 0;
-                while (sugg.List.Count() != i)
+                while (i < 10 && sugg.List.Count() > i)
                 {
                     book = await client.Books.GetByBookId(sugg.List.ElementAt(i).BestBook.Id);
                     if (book != null && book.AverageRating > g)
